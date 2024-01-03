@@ -16,26 +16,27 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
 public class SwaggerConfig {
 
 	@Bean
-    OpenAPI springBlogPessoalOpenAPI() {
+    OpenAPI springBlogPessoalOperAPI() {
         return new OpenAPI()
-            .info(new Info()
-                .title("Projeto Blog Pessoal")
-                .description("Projeto Blog Pessoal - Luiz Eduardo")
-                .version("v0.0.1")
-                .license(new License()
-                    .name("Luiz Eduardo")
-                    .url("https://github.com/LuizEduardoSC"))
-                .contact(new Contact()
-                    .name("Luiz Eduardo")
-                    .url("https://github.com/LuizEduardoSC")
-                    .email("luizeduardoedd1@gmail.com")))
-            .externalDocs(new ExternalDocumentation()
-                .description("Github")
-                .url("https://github.com/LuizEduardoSC"));
+                .info(new Info()
+                        .title("Projeto Blog Pessoal")
+                        .description("Projeto Blog Pessoal - Luiz Eduardo Silva Costa")
+                        .version("v0.0.1")
+                        .license(new License()
+                                .name("Luiz Eduardo Silva Costa")
+                                .url("https://github.com/LuizEduardoSC"))
+                        .contact(new Contact()
+                                .name("Luiz Eduardo Silva Costa")
+                                .url("https://github.com/LuizEduardoSC")
+                                .email("luizeduardoedd1@gmail.com")))
+                    .externalDocs(new ExternalDocumentation()
+                            .description("Github")
+                            .url("https://github.com/LuizEduardoSC"));
     }
 
+
 	@Bean
-	public OpenApiCustomizer customerGlobalHeaderOpenApiCustomiser() {
+	OpenApiCustomizer customerGlobalHeaderOpenApiCustomiser() {
 
 		return openApi -> {
 			openApi.getPaths().values().forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
@@ -60,4 +61,5 @@ public class SwaggerConfig {
 		return new ApiResponse().description(message);
 
 	}
+	
 }

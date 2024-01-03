@@ -97,11 +97,6 @@ public class PostagemController {
 		else
 			postagemRepository.deleteById(id); /* Se for encontrado, deletar */
 
-		/*
-		 * Optional<Postagem> postagem = postagemRepository.findById(id);
-		 * .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
-		 * .map(postagemRepository -> postagemRepository.;
-		 */
 
 		// DELETE FROM tb_postagens WHERE id = ?;
 	}
