@@ -114,33 +114,33 @@ public class UsuarioControllerTest {
 	}
 
 	@Test
-	@DisplayName("😁 Deve Autenticar Usuário")
-	public void deveAutenticarUsuario() {
+	@DisplayName("😬 Listar Um Usuário Específico")
+	public void deveListarApenasUmUsuario() {
+	
+		Optional<Usuario> usuarioBusca = usuarioService.cadastrarUsuario(new Usuario(0L, 
+				"Laura Santolia", "laura_santolia@email.com.br", "laura12345", "-"));
+			
+		ResponseEntity<String> resposta = testRestTemplate
+				.withBasicAuth("root@root.com", "rootroot")
+				.exchange("/usuarios/" + usuarioBusca.get().getId(), HttpMethod.GET, null, String.class);
 
-		UsuarioLogin usuarioLogin = new UsuarioLogin();
-		usuarioLogin.setUsuario("root@root.com");
-		usuarioLogin.setSenha("rootroot");
-
-		// Corpo da requisição
-		HttpEntity<UsuarioLogin> corpoRequisicao = new HttpEntity<UsuarioLogin>(usuarioLogin);
-
-		// Requisição HTTP
-		ResponseEntity<UsuarioLogin> corpoResposta = testRestTemplate.exchange("/usuarios/logar", HttpMethod.POST,
-				corpoRequisicao, UsuarioLogin.class);
-
-		assertEquals(HttpStatus.OK, corpoResposta.getStatusCode());
+		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+		
 	}
 
 	@Test
-	@DisplayName("😁 Deve Buscar Usuário Por ID")
-	public void deveBuscarUsuarioId() {
+	@DisplayName("😮 Login do Usuário")
+	public void deveAutenticarUsuario() {
 
-		usuarioService.cadastrarUsuario(new Usuario(0L, "Eduardo", "eduardo@email.com.br", "12345678", ""));
+		usuarioService.cadastrarUsuario(new Usuario(0L, 
+			"Marisa Souza", "marisa_souza@email.com.br", "13465278", "-"));
 
-		// Requisição HTTP
-		ResponseEntity<String> corpoResposta = testRestTemplate.withBasicAuth("root@root.com", "rootroot")
-				.exchange("/usuarios/1", HttpMethod.GET, null, String.class);
+		HttpEntity<UsuarioLogin> corpoRequisicao = new HttpEntity<UsuarioLogin>(new UsuarioLogin(0L, "", "marisa_souza@email.com.br", "13465278", "", ""));
+
+		ResponseEntity<UsuarioLogin> corpoResposta = testRestTemplate
+			.exchange("/usuarios/logar", HttpMethod.POST, corpoRequisicao, UsuarioLogin.class);
 
 		assertEquals(HttpStatus.OK, corpoResposta.getStatusCode());
+
 	}
 }
