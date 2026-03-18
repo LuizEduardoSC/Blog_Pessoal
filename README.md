@@ -79,4 +79,4 @@ cd Blog_Pessoal
 
 ## 👤 Autor
 Desenvolvido por **Luiz Eduardo Silva Costa**.
-[GitHub](https://github.com/LuizEduardoSC) | [LinkedIn](https://www.linkedin.com/in/luiz-eduardo-sc/)
+[GitHub](https://github.com/LuizEduardoSC) | [LinkedIn](https://www.linkedin.com/in/luiz-eduardosc/)
