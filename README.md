@@ -22,14 +22,38 @@ O **Blog Pessoal** é uma API REST desenvolvida com **Spring Boot**, projetada p
 - **Spring Security** (Autenticação e Autorização)
 - **JSON Web Token (JWT)** (Segurança de rotas)
 - **MySQL** (Banco de dados em ambiente de desenvolvimento)
-- **PostgreSQL** (Configurado para o ambiente de produção)
+- **PostgreSQL / Neon** (Banco de dados em produção)
+- **Render** (Plataforma de Hospedagem)
 - **Maven** (Gerenciador de dependências)
 - **Swagger (OpenAPI 3)** (Documentação da API)
 
 ---
 
-## ⚙️ Como Rodar Localmente
+## 🌐 Deploy em Produção
 
+A API está hospedada no **Render** e utiliza o **Neon PostgreSQL** como banco de dados serverless.
+
+- **URL Base:** `https://blogpessoal-utob.onrender.com`
+- **Documentação:** `https://blogpessoal-utob.onrender.com/swagger-ui/index.html`
+
+---
+
+## 🔒 Variáveis de Ambiente (Produção)
+
+Para rodar este projeto em um ambiente como o Render, as seguintes variáveis devem estar configuradas:
+
+| Variável | Descrição |
+| :--- | :--- |
+| `POSTGRESHOST` | Hostname do banco (ex: `ep-xxx-pooler.neon.tech`) |
+| `POSTGRESPORT` | Porta do banco (Padrão: `5432`) |
+| `POSTGRESDATABASE` | Nome do banco |
+| `POSTGRESUSER` | Usuário do banco |
+| `POSTGRESPASSWORD` | Senha do banco |
+| `PORT` | Porta que o Render fornece (Normalmente `10000`) |
+
+---
+
+## ⚙️ Como Rodar Localmente
 ### Pré-requisitos
 - **Java 17** ou superior instalado.
 - **MySQL** instalado e rodando.
