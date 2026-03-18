@@ -33,7 +33,7 @@ public class Postagem {
 	
 	@Column(length = 1000)
 	@NotBlank(message = "O atributo texto é obrigatório!")
-	@Size(min = 10, max = 1000, message = "O atributo texto deve conter no mínimo 10 e no máximo 1000 caracteres")
+	@Size(min = 3, max = 1000, message = "O atributo texto deve conter no mínimo 03 e no máximo 1000 caracteres")
 	private String texto;
 	
 	@UpdateTimestamp

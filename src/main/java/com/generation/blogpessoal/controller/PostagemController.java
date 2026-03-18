@@ -43,7 +43,7 @@ public class PostagemController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Postagem> getById(@PathVariable Long id) {
+	public ResponseEntity<Postagem> getById(@PathVariable("id") Long id) {
 		return postagemRepository.findById(id)
 				.map(resposta -> ResponseEntity.ok(resposta))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -52,7 +52,7 @@ public class PostagemController {
 	}
 
 	@GetMapping("/titulo/{titulo}")
-	public ResponseEntity<List<Postagem>> getByTitulo(@PathVariable String titulo) {
+	public ResponseEntity<List<Postagem>> getByTitulo(@PathVariable("titulo") String titulo) {
 		return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo));
 	}
 
@@ -94,7 +94,7 @@ public class PostagemController {
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable Long id) {
+	public void delete(@PathVariable("id") Long id) {
 		Optional<Postagem> postagem = postagemRepository.findById(id); /* Criar a Optional e procurar pela id digitada */
 		if (postagem.isEmpty()) /* Verificar se o valor digitado existe */
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND); /* Se não existir, retornar NOT FOUND */

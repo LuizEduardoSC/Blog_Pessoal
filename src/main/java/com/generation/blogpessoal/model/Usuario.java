@@ -21,6 +21,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "tb_usuarios")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Usuario {
 
 	@Id
@@ -38,7 +39,7 @@ public class Usuario {
 	@NotBlank(message = "O Atributo Senha é Obrigatório!")
 	@Size(min = 8, message = "A Senha deve ter no mínimo 8 caracteres")
 	private String senha;
-	
+
 	@Column(length = 5000)
 	@Size(max = 5000, message = "O link da foto não pode ser maior do que 5000 caracteres")
 	private String foto;
@@ -46,9 +47,9 @@ public class Usuario {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("usuario")
 	private List<Postagem> postagem;
-	
+
 	/* Método Construtor */
-	
+
 	public Usuario(Long id, String nome, String usuario, String senha, String foto) {
 		this.id = id;
 		this.nome = nome;
@@ -56,14 +57,15 @@ public class Usuario {
 		this.senha = senha;
 		this.foto = foto;
 	}
-	
-	public Usuario() { }
+
+	public Usuario() {
+	}
 
 	/* Insira os Getters and Setters */
 
 	public Long getId() {
 		return this.id;
-	
+
 	}
 
 	public void setId(Long id) {
