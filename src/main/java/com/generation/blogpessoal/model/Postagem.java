@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 
@@ -39,10 +40,12 @@ public class Postagem {
 	private LocalDateTime data;
 	
 	@ManyToOne
+	@NotNull(message = "O tema é obrigatório")
 	@JsonIgnoreProperties("postagem")
 	private Tema tema; // esse é o "tema" que vai no mappedBy
 	
 	@ManyToOne
+	@NotNull(message = "O usuário é obrigatório")
 	@JsonIgnoreProperties("postagem")
 	private Usuario usuario; // esse é o "usuario" que vai no mappedBy
 	
