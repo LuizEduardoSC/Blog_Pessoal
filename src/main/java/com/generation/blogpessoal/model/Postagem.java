@@ -1,17 +1,21 @@
 package com.generation.blogpessoal.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -48,7 +52,10 @@ public class Postagem {
 	@NotNull(message = "O usuário é obrigatório")
 	@JsonIgnoreProperties("postagem")
 	private Usuario usuario; // esse é o "usuario" que vai no mappedBy
-	
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "postagem", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties("postagem")
+	private List<Comentario> comentarios;
 
 	public Long getId() {
 		return id;
@@ -96,6 +103,14 @@ public class Postagem {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public List<Comentario> getComentarios() {
+		return comentarios;
+	}
+
+	public void setComentarios(List<Comentario> comentarios) {
+		this.comentarios = comentarios;
 	}
 
 }

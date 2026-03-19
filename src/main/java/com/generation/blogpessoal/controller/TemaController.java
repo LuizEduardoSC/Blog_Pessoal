@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,8 +35,9 @@ public class TemaController {
     private TemaRepository temaRepository;
     
     @GetMapping
-    public ResponseEntity<List<Tema>> getAll(){
-        return ResponseEntity.ok(temaRepository.findAll());
+    public ResponseEntity<Page<Tema>> getAll(
+            @PageableDefault(size = 10, sort = "descricao") Pageable pageable){
+        return ResponseEntity.ok(temaRepository.findAll(pageable));
     }
     
     @GetMapping("/{id}")
