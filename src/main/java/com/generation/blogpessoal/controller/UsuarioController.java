@@ -68,7 +68,14 @@ public class UsuarioController {
 		return usuarioService.atualizarUsuario(usuario)
 				.map(resposta -> ResponseEntity.status(HttpStatus.OK).body(resposta))
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-}
+	}
+
+	@GetMapping("/dashboard/{id}")
+	public ResponseEntity<com.generation.blogpessoal.model.UsuarioDashboardDTO> getDashboard(@PathVariable Long id) {
+		return usuarioService.getDashboardStats(id)
+				.map(resposta -> ResponseEntity.status(HttpStatus.OK).body(resposta))
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
 
 }
 

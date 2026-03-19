@@ -1,6 +1,8 @@
 package com.generation.blogpessoal.service;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.blogpessoal.model.Usuario;
+import com.generation.blogpessoal.model.UsuarioDashboardDTO;
 import com.generation.blogpessoal.model.UsuarioLogin;
+import com.generation.blogpessoal.repository.ComentarioRepository;
+import com.generation.blogpessoal.repository.PostagemRepository;
 import com.generation.blogpessoal.repository.UsuarioRepository;
 import com.generation.blogpessoal.security.JwtService;
 
@@ -30,6 +35,12 @@ public class UsuarioService {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private PostagemRepository postagemRepository;
+
+	@Autowired
+	private ComentarioRepository comentarioRepository;
 
 	public Optional<Usuario> cadastrarUsuario(Usuario usuario) {
 
@@ -113,6 +124,24 @@ public class UsuarioService {
 
 				return usuarioLogin;
 			}
+		}
+		return Optional.empty();
+	}
+
+	public Optional<UsuarioDashboardDTO> getDashboardStats(Long id) {
+		if (usuarioRepository.existsById(id)) {
+			long posts = postagemRepository.countByUsuarioId(id);
+			long comments = comentarioRepository.countByUsuarioId(id);
+
+			String topTema = postagemRepository.findAllByUsuarioId(id).stream()
+					.filter(p -> p.getTema() != null)
+					.collect(Collectors.groupingBy(p -> p.getTema().getDescricao(), Collectors.counting()))
+					.entrySet().stream()
+					.max(Map.Entry.comparingByValue())
+					.map(Map.Entry::getKey)
+					.orElse("Nenhum");
+
+			return Optional.of(new UsuarioDashboardDTO(id, posts, comments, topTema));
 		}
 		return Optional.empty();
 	}
