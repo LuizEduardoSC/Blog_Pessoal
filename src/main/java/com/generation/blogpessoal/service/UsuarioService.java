@@ -28,33 +28,63 @@ public class UsuarioService {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
+	@Autowired
+	private EmailService emailService;
+
 	public Optional<Usuario> cadastrarUsuario(Usuario usuario) {
 
 		if (usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
-			return Optional.empty();
-		
-		if(usuario.getFoto().isBlank())
-	         usuario.setFoto("https://i.imgur.com/I8MfmC8.png");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já existe!", null);
+
+		if (usuario.getSenha() == null || usuario.getSenha().isBlank())
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha é obrigatória!", null);
+
+		if (usuario.getSenha().length() < 8)
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha deve ter no mínimo 8 caracteres!", null);
+
+		if (usuario.getFoto() == null || usuario.getFoto().isBlank())
+			usuario.setFoto("https://i.imgur.com/I8MfmC8.png");
 
 		usuario.setSenha(criptografarSenha(usuario.getSenha()));
 
-		return Optional.ofNullable(usuarioRepository.save(usuario));
+		Optional<Usuario> usuarioSalvo = Optional.ofNullable(usuarioRepository.save(usuario));
+
+		// Enviar e-mail de boas-vindas assincronamente
+		if (usuarioSalvo.isPresent()) {
+			emailService.enviarEmailBoasVindas(usuarioSalvo.get().getUsuario(), usuarioSalvo.get().getNome());
+		}
+
+		return usuarioSalvo;
 
 	}
 
 	public Optional<Usuario> atualizarUsuario(Usuario usuario) {
 
-		if (usuarioRepository.findById(usuario.getId()).isPresent()) {
+		Optional<Usuario> usuarioBanco = usuarioRepository.findById(usuario.getId());
+
+		if (usuarioBanco.isPresent()) {
 
 			Optional<Usuario> buscaUsuario = usuarioRepository.findByUsuario(usuario.getUsuario());
 
 			if ((buscaUsuario.isPresent()) && (buscaUsuario.get().getId() != usuario.getId()))
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já existe!", null);
 
-			if(usuario.getFoto().isBlank())
-		         usuario.setFoto("https://i.imgur.com/I8MfmC8.png");
-			
-			usuario.setSenha(criptografarSenha(usuario.getSenha()));
+			if (usuario.getFoto() == null || usuario.getFoto().isBlank())
+				usuario.setFoto("https://i.imgur.com/I8MfmC8.png");
+
+			// Atualizar o campo "sobre"
+			usuarioBanco.get().getSobre(); // Só para garantir que o objeto está carregado
+
+			// Se a senha estiver vazia, mantém a senha atual do banco (já criptografada)
+			if (usuario.getSenha() == null || usuario.getSenha().isBlank()) {
+				usuario.setSenha(usuarioBanco.get().getSenha());
+			} else {
+				// Se enviou uma nova senha, valida o tamanho e criptografa
+				if (usuario.getSenha().length() < 8)
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha deve ter no mínimo 8 caracteres!", null);
+				
+				usuario.setSenha(criptografarSenha(usuario.getSenha()));
+			}
 
 			return Optional.ofNullable(usuarioRepository.save(usuario));
 		}

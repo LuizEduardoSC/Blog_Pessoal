@@ -6,8 +6,9 @@ O **Blog Pessoal** é uma API REST desenvolvida com **Spring Boot**, projetada p
 
 ## 🚀 Funcionalidades
 
-- **Gerenciamento de Usuários:** Cadastro, login e atualização de perfis.
-- **Postagens:** Criação, leitura, atualização e exclusão (CRUD) de postagens.
+- **Gerenciamento de Usuários:** Cadastro com confirmação por e-mail, login e atualização de perfis (incluindo campo `sobre`).
+- **Postagens:** CRUD completo com suporte a **Paginação**.
+- **Comentários:** Sistema de comentários em postagens.
 - **Temas:** Organização de postagens por categorias/temas.
 - **Segurança:** Autenticação via Token JWT e criptografia de senhas com BCrypt.
 - **CORS:** Configuração global para permitir requisições do frontend.
@@ -22,10 +23,9 @@ O **Blog Pessoal** é uma API REST desenvolvida com **Spring Boot**, projetada p
 - **Spring Data JPA** (Persistência de dados)
 - **Spring Security** (Autenticação e Autorização)
 - **JSON Web Token (JWT)** (Segurança de rotas)
-- **MySQL** (Banco de dados em ambiente de desenvolvimento)
-- **PostgreSQL / Neon** (Banco de dados em produção)
-- **Render** (Plataforma de Hospedagem)
-- **Maven** (Gerenciador de dependências)
+- **Java Mail Sender / Mailtrap** (Confirmação de cadastro por e-mail)
+- **MySQL / PostgreSQL** (Bancos de dados)
+- **Render / Neon** (Hospedagem e Banco Nuvem)
 - **Swagger (OpenAPI 3)** (Documentação da API)
 
 ---
@@ -64,8 +64,13 @@ Para rodar este projeto em um ambiente como o Render, as seguintes variáveis de
 Acesse seu terminal MySQL e execute:
 ```sql
 CREATE DATABASE IF NOT EXISTS db_blogpessoal;
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
-FLUSH PRIVILEGES;
+```
+
+### 2. Configurar Variáveis de E-mail
+No arquivo `src/main/resources/application-dev.properties`, configure suas credenciais do **Mailtrap**:
+```properties
+spring.mail.username=SEU_USUARIO_MAILTRAP
+spring.mail.password=SUA_SENHA_MAILTRAP
 ```
 
 ### 2. Clonar e Iniciar
@@ -107,12 +112,11 @@ cd Blog_Pessoal
 | :--- | :--- | :--- | :--- |
 | POST | `/usuarios/cadastrar` | ❌ Público | Cadastra um novo usuário |
 | POST | `/usuarios/logar` | ❌ Público | Autentica e retorna token JWT |
-| GET | `/postagens` | ✅ Token | Lista todas as postagens |
+| GET | `/postagens` | ✅ Token | Lista postagens (**Paginado**) |
 | POST | `/postagens` | ✅ Token | Cria uma nova postagem |
-| PUT | `/postagens` | ✅ Token | Atualiza uma postagem |
-| DELETE | `/postagens/{id}` | ✅ Token | Remove uma postagem |
-| GET | `/temas` | ✅ Token | Lista todos os temas |
-| POST | `/temas` | ✅ Token | Cria um novo tema |
+| GET | `/comentarios/postagem/{id}` | ✅ Token | Lista comentários de uma postagem |
+| POST | `/comentarios` | ✅ Token | Adiciona um comentário |
+| GET | `/temas` | ✅ Token | Lista temas (**Paginado**) |
 | DELETE | `/temas/{id}` | ✅ Token | Remove um tema |
 
 ---
