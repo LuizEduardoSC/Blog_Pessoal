@@ -10,13 +10,14 @@ O **Blog Pessoal** é uma API REST desenvolvida com **Spring Boot**, projetada p
 - **Postagens:** Criação, leitura, atualização e exclusão (CRUD) de postagens.
 - **Temas:** Organização de postagens por categorias/temas.
 - **Segurança:** Autenticação via Token JWT e criptografia de senhas com BCrypt.
+- **CORS:** Configuração global para permitir requisições do frontend.
 - **Documentação:** Interface interativa via Swagger UI para teste de endpoints.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Java 17**
+- **Java 21**
 - **Spring Boot 3.2.0**
 - **Spring Data JPA** (Persistência de dados)
 - **Spring Security** (Autenticação e Autorização)
@@ -33,8 +34,8 @@ O **Blog Pessoal** é uma API REST desenvolvida com **Spring Boot**, projetada p
 
 A API está hospedada no **Render** e utiliza o **Neon PostgreSQL** como banco de dados serverless.
 
-- **URL Base:** `https://blogpessoal-utob.onrender.com`
-- **Documentação:** `https://blogpessoal-utob.onrender.com/swagger-ui/index.html`
+- **URL Base:** `https://blogpessoal-vms9.onrender.com`
+- **Documentação:** `https://blogpessoal-vms9.onrender.com/swagger-ui/index.html`
 
 ---
 
@@ -54,13 +55,13 @@ Para rodar este projeto em um ambiente como o Render, as seguintes variáveis de
 ---
 
 ## ⚙️ Como Rodar Localmente
+
 ### Pré-requisitos
-- **Java 17** ou superior instalado.
+- **Java 21** ou superior instalado.
 - **MySQL** instalado e rodando.
-- **Postman** ou **Insomnia** para testes iniciais.
 
 ### 1. Configurar o Banco de Dados
-Acesse seu terminal MySQL e execute os comandos abaixo para garantir o acesso correto do Spring:
+Acesse seu terminal MySQL e execute:
 ```sql
 CREATE DATABASE IF NOT EXISTS db_blogpessoal;
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
@@ -69,35 +70,50 @@ FLUSH PRIVILEGES;
 
 ### 2. Clonar e Iniciar
 ```bash
-# Clone o repositório (substitua pela sua URL)
+# Clone o repositório
 git clone https://github.com/LuizEduardoSC/Blog_Pessoal.git
-
-# Entre na pasta
 cd Blog_Pessoal
 
-# Execute o projeto via Maven Wrapper
+# Execute o projeto
 ./mvnw spring-boot:run
 ```
+
+> **Importante:** O arquivo `src/main/resources/application.properties` deve estar com `spring.profiles.active=dev` para rodar localmente com MySQL.
+
+---
+
+## 🔄 Alternando entre Ambientes
+
+| Arquivo | Local | Produção (Render) |
+| :--- | :--- | :--- |
+| `application.properties` | `spring.profiles.active=dev` | `spring.profiles.active=prod` |
+| Frontend `.env` | `VITE_API_URL=http://localhost:8080` | `VITE_API_URL=https://blogpessoal-vms9.onrender.com` |
 
 ---
 
 ## 🧪 Como Testar e Acessar
 
 1.  **Swagger UI:** Acesse http://localhost:8080/swagger-ui/index.html para ver e testar os endpoints.
-2.  **Primeiro Acesso:** 
-    - O banco inicia vazio. Você deve cadastrar um usuário via **Postman/Insomnia** enviando um `POST` para `/usuarios/cadastrar`.
-    - Use as credenciais criadas para fazer login na janela do Swagger.
+2.  **Primeiro Acesso:**
+    - Cadastre um usuário via `POST /usuarios/cadastrar`.
+    - Use as credenciais para fazer login e obter o token JWT.
+    - Insira o token no Swagger (botão **Authorize**) para acessar os endpoints protegidos.
 
 ---
 
 ## 📁 Estrutura de Endpoints Principais
 
-| Método | Endpoint | Descrição |
-| :--- | :--- | :--- |
-| POST | `/usuarios/cadastrar` | Cadastra um novo usuário (Público) |
-| POST | `/usuarios/logar` | Autentica e gera token JWT (Público) |
-| GET | `/postagens` | Lista todas as postagens (Autenticado) |
-| GET | `/temas` | Lista todos os temas (Autenticado) |
+| Método | Endpoint | Auth | Descrição |
+| :--- | :--- | :--- | :--- |
+| POST | `/usuarios/cadastrar` | ❌ Público | Cadastra um novo usuário |
+| POST | `/usuarios/logar` | ❌ Público | Autentica e retorna token JWT |
+| GET | `/postagens` | ✅ Token | Lista todas as postagens |
+| POST | `/postagens` | ✅ Token | Cria uma nova postagem |
+| PUT | `/postagens` | ✅ Token | Atualiza uma postagem |
+| DELETE | `/postagens/{id}` | ✅ Token | Remove uma postagem |
+| GET | `/temas` | ✅ Token | Lista todos os temas |
+| POST | `/temas` | ✅ Token | Cria um novo tema |
+| DELETE | `/temas/{id}` | ✅ Token | Remove um tema |
 
 ---
 
