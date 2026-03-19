@@ -6,6 +6,7 @@ O **Blog Pessoal** é uma API REST desenvolvida com **Spring Boot**, projetada p
 
 ## 🚀 Funcionalidades
 
+- **Dashboard de Estatísticas:** Painel no perfil com total de postagens, comentários e tema mais frequente do autor.
 - **Gerenciamento de Usuários:** Cadastro com confirmação por e-mail, login e atualização de perfis (incluindo campo `sobre`).
 - **Postagens:** CRUD completo com suporte a **Paginação**.
 - **Comentários:** Sistema de comentários em postagens.
@@ -112,6 +113,7 @@ cd Blog_Pessoal
 | :--- | :--- | :--- | :--- |
 | POST | `/usuarios/cadastrar` | ❌ Público | Cadastra um novo usuário |
 | POST | `/usuarios/logar` | ❌ Público | Autentica e retorna token JWT |
+| GET | `/usuarios/dashboard/{id}` | ✅ Token | Resumo de métricas do usuário |
 | GET | `/postagens` | ✅ Token | Lista postagens (**Paginado**) |
 | POST | `/postagens` | ✅ Token | Cria uma nova postagem |
 | GET | `/comentarios/postagem/{id}` | ✅ Token | Lista comentários de uma postagem |
